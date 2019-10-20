@@ -37,7 +37,7 @@ public class TrainSQL {
     public void pushCar(int carNum, int range) {
         if (IDSet()) {
             String fnlFilter = trainFilter + " ," + CART + "=" + carNum;
-            dbs.update_query(CURRENTTABLE, CART, range, fnlFilter);
+            dbs.update_query(CURRENTTABLE, CART, "" + range, fnlFilter);
         }
     }
 
