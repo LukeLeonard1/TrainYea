@@ -32,6 +32,10 @@ public class CTATrainClient {
 		dbs.setTrainID(1);
 		dbs.pushCar(2, 2);
 		dbs.pushCar(1, 4);
+		dbs.setTrainID(3);
+		dbs.pushCar(2, 2);
+		dbs.pushCar(4, 3);
+		dbs.pushCar(1, 4);
 
 	}
 

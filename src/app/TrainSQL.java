@@ -5,18 +5,17 @@ public class TrainSQL {
     // private static final String TRAINLINE = "TrainLine";
     // private static final String DIRECTION = "Direction";
     private static final String CURRENTTABLE = "Current";
-    private static final String RANGE = "Range";
+    private static final String RANGE = "Rng";
     private static final String CART = "Cart";
-    private static final String ID = "Id";
+    private static final String ID = "TrainId";
     private int trainID = -1;
-    private String trainFilter = "";
-    private boolean connected = false;
+    private String trainFilter = "";  
 
     SQLConnection dbs = new SQLConnection();
 
     public void setTrainID(int trainID) {
         this.trainID = trainID;
-        trainFilter = ID + " = " + trainID;
+        trainFilter = ID + "=" + trainID;
         System.out.println("Train ID: " + trainID + " set!");
     }
 
@@ -25,7 +24,7 @@ public class TrainSQL {
             System.out.println("Train ID not set!");
             return false;
         }
-        return true && connected;
+        return true;
     }
 
     // public void pushTrain(String color, char direction) {
@@ -37,8 +36,12 @@ public class TrainSQL {
 
     public void pushCar(int carNum, int range) {
         if (IDSet()) {
-            String fnlFilter = trainFilter + " ," + CART + "=" + carNum;
-            dbs.update_query(CURRENTTABLE, CART, "" + range, fnlFilter);
+            String fnlFilter = trainFilter + " AND " + CART + "=" + carNum;
+            String defaultElm = ID+", "+CART;
+            String defaultVal = trainID+","+carNum;
+            dbs.update_query(CURRENTTABLE, RANGE, "" + range, fnlFilter, defaultElm,defaultVal);
+        }else {
+        	System.out.println("Failed to push car!");
         }
     }
 

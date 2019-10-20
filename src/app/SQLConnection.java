@@ -19,6 +19,7 @@ public class SQLConnection {
                 // Class.forName(DRIVER);
                 DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             } catch (SQLException e) {
+            	e.printStackTrace();
                 System.out.println(" MySQL JDBC Driver not found!");
                 return false;
             }
@@ -33,13 +34,15 @@ public class SQLConnection {
             loadDriver();
             Connection con = DriverManager.getConnection(url, user, pass);
             Statement stmt = con.createStatement();
+            System.out.println(statement);
             stmt.executeUpdate(statement);
             con.close();
+            return true;
         } catch (Exception e) {
+        	e.printStackTrace();
             System.out.println("Issue executing update statement!");
             return false;
         }
-        return true;
     }
 
     public boolean executeStatement(String statement) {
@@ -47,10 +50,12 @@ public class SQLConnection {
             loadDriver();
             Connection con = DriverManager.getConnection(url, user, pass);
             Statement stmt = con.createStatement();
+            System.out.println(statement);
             stmt.execute(statement);
             con.close();
             return true;
         } catch (Exception e) {
+        	e.printStackTrace();
             System.out.println("Issue executing statement!");
         }
         return false;
@@ -61,42 +66,30 @@ public class SQLConnection {
             loadDriver();
             Connection con = DriverManager.getConnection(url, user, pass);
             Statement stmt = con.createStatement();
+            System.out.println(statement);
             ResultSet rs = stmt.executeQuery(statement);
-            con.close();
             if (rs.next()) {
                 return rs.getObject(1);
             }
+            con.close();
         } catch (Exception e) {
+        	e.printStackTrace();
             System.out.println("Issue executing statement!");
         }
         return new Object();
     }
 
-    private Object checkElement(String tableName, String element) {
-        return executeSelectStatement("SELECT " + element + " FROM " + tableName, tableName);
-    }
-
     private Object checkElement(String tableName, String element, String filter) {
-        return executeSelectStatement("SELECT " + element + " FROM " + tableName + " WHERE " + filter, tableName);
+        return executeSelectStatement("select " + element + " from " + tableName + " where (" + filter+")", tableName);
     }
 
-    public boolean input_query(String tableName, String element, String value) {
-        return executeUpdateStatement("INSERT INTO " + tableName + element + " VALUES " + value);
+    public boolean input_query(String tableName, String elements, String values) {
+        return executeUpdateStatement("INSERT INTO " + tableName +"("+ elements + ") VALUES (" + values+")");
     }
 
-    public boolean input_query(String tableName, String element, String value, String filter) {
-        return executeUpdateStatement("INSERT INTO " + tableName + " SET " + element + " " + "WHERE " + filter);
-    }
-
-    public boolean update_query(String tableName, String element, String value) {
-        if (checkElement(tableName, element).getClass() == Object.class)
-            input_query(tableName, element, value);
-        return executeUpdateStatement("UPDATE " + tableName + " SET " + element);
-    }
-
-    public boolean update_query(String tableName, String element, String value, String filter) {
+    public boolean update_query(String tableName, String element, String value, String filter, String defaultElms, String defaultVals) {
         if (checkElement(tableName, element, filter).getClass() == Object.class) // Check if obj is not empty
-            input_query(tableName, element, value, filter);
-        return executeUpdateStatement("UPDATE " + tableName + " SET " + element + " " + "WHERE " + filter);
+            input_query(tableName, defaultElms, defaultVals);
+        return executeUpdateStatement("UPDATE " + tableName + " SET " + element + "="+value + " WHERE (" + filter+")");
     }
 }
