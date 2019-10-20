@@ -42,11 +42,8 @@ public class TrainCars {
 				return 2;//some seats avaliable
 			else if(getCurrentCapacity() <=38)
 				return 3;// Possiblly avaliable
-			else
-				return 4; //no seats avaliable
 		}
-		else
-			return 5;// Ton of people on that cart
+		return 4; //no seats avaliable
 	
 	}
 

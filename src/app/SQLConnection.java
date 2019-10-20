@@ -31,21 +31,18 @@ public class SQLConnection {
     }
 
     public void getConnection() {
-        Properties connectionProps = new Properties();
-        connectionProps.put("user", user);
-//        connectionProps.put("password", pass);
-        try {
-            loadDriver();
-//            conn = DriverManager.getConnection("jdbc:" + "mysql" + "://" + "localhost" + ":" + "3307" + "/" + "",
-//                    connectionProps);
-            conn = DriverManager.getConnection(url);
-        } catch (SQLException ex) {
-            System.out.println("SQL Connection Failed!");
-            ex.printStackTrace();
-        } catch (Exception ex) {
-            System.out.println("Connection Failed!");
-            ex.printStackTrace();
-        }
+    			try {
+    			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+    			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3307/TrainYea?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","");
+    			Statement stmt=con.createStatement();  
+    			ResultSet rs=stmt.executeQuery("select * from trains");  
+    			while(rs.next())  
+    			System.out.println(rs.getString(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  
+    			con.close();
+    			}catch(Exception e){
+    				System.out.println(e);
+    				
+    	}
     }
 
     public void executeMySQLQuery() {
