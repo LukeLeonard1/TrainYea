@@ -36,7 +36,7 @@ public class SQLConnection {
     public boolean establishConnection(String url, String root, String password) {
         try {
             // if (driverSet || loadDriver()) {
-                connection = DriverManager.getConnection(url, root, password);
+                connection = DriverManager.getConnection(url);
                 return true;
             // }
         } catch (SQLException e) {
