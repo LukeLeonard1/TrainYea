@@ -14,6 +14,7 @@ public class SQLConnection {
             + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     String user = "root";
     String pass = "";
+    Connection con;
 
     private static boolean loadDriver() {
         if (!driverSet) {
@@ -34,7 +35,7 @@ public class SQLConnection {
     private boolean executeUpdateStatement(String statement) {
         try {
             loadDriver();
-            Connection con = DriverManager.getConnection(url, user, pass);
+            // Connection con = DriverManager.getConnection(url, user, pass);
             Statement stmt = con.createStatement();
             System.out.println(statement);
             stmt.executeUpdate(statement);
@@ -50,7 +51,7 @@ public class SQLConnection {
     public boolean executeStatement(String statement) {
         try {
             loadDriver();
-            Connection con = DriverManager.getConnection(url, user, pass);
+            // Connection con = DriverManager.getConnection(url, user, pass);
             Statement stmt = con.createStatement();
             System.out.println(statement);
             stmt.execute(statement);
@@ -66,7 +67,7 @@ public class SQLConnection {
     public Object executeSelectStatement(String statement, String columnLabel) {
         try {
             loadDriver();
-            Connection con = DriverManager.getConnection(url, user, pass);
+            // Connection con = DriverManager.getConnection(url, user, pass);
             Statement stmt = con.createStatement();
             System.out.println(statement);
             ResultSet rs = stmt.executeQuery(statement);
@@ -102,6 +103,11 @@ public class SQLConnection {
         this.url = url;
         this.user = user;
         this.pass = pass;
+        try {
+            con = DriverManager.getConnection(url, user, pass);
+        } catch (Exception e) {
+            System.out.println("Failed to establish connection!");
+        }
     }
 
     public SQLConnection() {
