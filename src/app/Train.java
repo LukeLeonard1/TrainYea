@@ -5,12 +5,13 @@ import java.util.ArrayList;
 public class Train {
 
 	int numOfCars;
+	int ID = 0;
 	String direction, line;
 
 	ArrayList<TrainCars> cars = new ArrayList<TrainCars>();
 
-	public Train(int TrainCars, String bound, String color) {
-
+	public Train(int TrainCars, String bound, String color, int ID) {
+		this.ID = ID;
 		for (int i = 1; i <= TrainCars; i++) {
 			cars.add(new TrainCars(i));
 			cars.get(i - 1).setWeight();
@@ -42,6 +43,10 @@ public class Train {
 		for (TrainCars trainCars : cars) {
 			trainCars.setWeight();
 		}
+	}
+
+	public int getID() { // TODO: remove after calling static db
+		return ID;
 	}
 
 	public String getLine() {

@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class CTATrainClient {
 
@@ -15,26 +16,32 @@ public class CTATrainClient {
 	}
 
 	private static void init() {
-		String[] colors = { "Red ", "Blue ", "Green ", "Pink " };
+		int tempID = 0;
+		String[] colors = { "Pink ", "Green ", "Blue ", "Red " };
 		Train temp;
 		for (String trainLine : colors) {
-			temp = new Train(5, "North", trainLine);
+			tempID++;
+			temp = new Train(5, "North", trainLine, tempID);
 			System.out.println(temp);
 			trains.add(temp);
-			temp = new Train(5, "South", trainLine);
+			tempID++;
+			temp = new Train(5, "South", trainLine, tempID);
 			System.out.println(temp);
 			trains.add(temp);
 		}
 		setTrainWeights();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		init();
 		while (true) {
+			TimeUnit.SECONDS.sleep(10);
 			for (Train train : trains) {
-				dbs.pullTrain(train.getLine(), train.getDirection());
+				// dbs.pullTrain(train.getLine(), train.getDirection()); //FIXME: pull static
+				// data from db
+				dbs.setTrainID(train.getID());
 				for (TrainCars car : train.getCars()) {
-					dbs.pushCar(car.getCarID(), car.getCurrentPop());	
+					dbs.pushCar(car.getCarID(), car.getCurrentPop());
 				}
 			}
 		}
