@@ -5,15 +5,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 public class SQLConnection {
-    // private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static boolean driverSet = false;
-    private Connection conn;
-    String url = "jdbc:mysql://localhost/db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    // private Connection con; //TODO: bigger scope
+    String url = "jdbc:mysql://localhost:3307/TrainYea?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     String user = "root";
-    String pass = "password";
+    String pass = "";
 
     private static boolean loadDriver() {
         if (!driverSet) {
@@ -30,70 +28,13 @@ public class SQLConnection {
         return true;
     }
 
-    public void getConnection() {
-    			try {
-    			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-    			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3307/TrainYea?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","");
-    			Statement stmt=con.createStatement();  
-    			ResultSet rs=stmt.executeQuery("select * from trains");  
-    			while(rs.next())  
-    			System.out.println(rs.getString(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  
-    			con.close();
-    			}catch(Exception e){
-    				System.out.println(e);
-    				
-    	}
-    }
-
-    public void executeMySQLQuery() {
-        Statement stmt = null;
-        ResultSet resultset = null;
-
-        try {
-            stmt = conn.createStatement();
-            resultset = stmt.executeQuery("SHOW DATABASES;");
-
-            if (stmt.execute("SHOW DATABASES;")) {
-                resultset = stmt.getResultSet();
-            }
-
-            while (resultset.next()) {
-                System.out.println(resultset.getString("Database"));
-            }
-        } catch (SQLException ex) {
-            System.out.println("SQL execute Connection Failed!");
-            ex.printStackTrace();
-        } finally {
-            // release resources
-            if (resultset != null) {
-                try {
-                    resultset.close();
-                } catch (SQLException sqlEx) {
-                }
-                resultset = null;
-            }
-
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException sqlEx) {
-                }
-                stmt = null;
-            }
-
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException sqlEx) {
-                }
-                conn = null;
-            }
-        }
-    }
-
     private boolean executeUpdateStatement(String statement) {
-        try (Statement stmt = conn.createStatement()) {
+        try {
+            loadDriver();
+            Connection con = DriverManager.getConnection(url, user, pass);
+            Statement stmt = con.createStatement();
             stmt.executeUpdate(statement);
+            con.close();
         } catch (Exception e) {
             System.out.println("Issue executing update statement!");
             return false;
@@ -102,8 +43,12 @@ public class SQLConnection {
     }
 
     public boolean executeStatement(String statement) {
-        try (Statement stmt = conn.createStatement()) {
+        try {
+            loadDriver();
+            Connection con = DriverManager.getConnection(url, user, pass);
+            Statement stmt = con.createStatement();
             stmt.execute(statement);
+            con.close();
             return true;
         } catch (Exception e) {
             System.out.println("Issue executing statement!");
@@ -112,8 +57,12 @@ public class SQLConnection {
     }
 
     public Object executeSelectStatement(String statement, String columnLabel) {
-        try (Statement stmt = conn.createStatement()) {
+        try {
+            loadDriver();
+            Connection con = DriverManager.getConnection(url, user, pass);
+            Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(statement);
+            con.close();
             if (rs.next()) {
                 return rs.getObject(1);
             }

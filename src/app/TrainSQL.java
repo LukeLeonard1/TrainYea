@@ -29,9 +29,10 @@ public class TrainSQL {
     }
 
     // public void pushTrain(String color, char direction) {
-    //     if (IDSet()) {
-    //         dbs.update_query(CURRENTTABLE, TRAINLINE + "=" + color + ", " + DIRECTION + "=" + direction, trainFilter);
-    //     }
+    // if (IDSet()) {
+    // dbs.update_query(CURRENTTABLE, TRAINLINE + "=" + color + ", " + DIRECTION +
+    // "=" + direction, trainFilter);
+    // }
     // }
 
     public void pushCar(int carNum, int range) {
@@ -42,7 +43,7 @@ public class TrainSQL {
     }
 
     public TrainSQL(String url, String root, String password) {
-//        connected = dbs.establishConnection(url, root, password);
-//        System.out.println(connected ? "Connection Made!" : "Connection Failed!");
+        // connected = dbs.establishConnection(url, root, password);
+        // System.out.println(connected ? "Connection Made!" : "Connection Failed!");
     }
 }
