@@ -39,7 +39,7 @@ public class SQLConnection {
             Statement stmt = con.createStatement();
             System.out.println(statement);
             stmt.executeUpdate(statement);
-            con.close();
+            // con.close();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,7 +55,7 @@ public class SQLConnection {
             Statement stmt = con.createStatement();
             System.out.println(statement);
             stmt.execute(statement);
-            con.close();
+            // con.close();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +74,7 @@ public class SQLConnection {
             if (rs.next()) {
                 return rs.getObject(1);
             }
-            con.close();
+            // con.close();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Issue executing statement!");
