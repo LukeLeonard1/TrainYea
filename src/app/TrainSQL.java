@@ -42,7 +42,7 @@ public class TrainSQL {
     }
 
     public TrainSQL(String url, String root, String password) {
-        connected = dbs.establishConnection(url, root, password);
-        System.out.println(connected ? "Connection Made!" : "Connection Failed!");
+//        connected = dbs.establishConnection(url, root, password);
+//        System.out.println(connected ? "Connection Made!" : "Connection Failed!");
     }
 }

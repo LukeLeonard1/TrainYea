@@ -8,8 +8,11 @@ import java.sql.Statement;
 
 public class SQLConnection {
     // private static final String DRIVER = "com.mysql.jdbc.Driver";
-    // private static boolean driverSet = false;
+     private static boolean driverSet = false;
     private Connection connection;
+    String url = "url";
+    String user = "user";
+    String pass = "pass"; 
 
     public void closeConnection() {
         try {
@@ -21,25 +24,25 @@ public class SQLConnection {
         }
     }
 
-    // private static boolean loadDriver() {
-    //     try {
-    //         Class.forName(DRIVER);
-    //     } catch (ClassNotFoundException e) {
-    //         System.out.println(" MySQL JDBC Driver not found!");
-    //         return false;
-    //     }
-    //     System.out.println("MySQL JDBC Driver Registered!");
-    //     driverSet = true;
-    //     return true;
-    // }
+     private static boolean loadDriver() {
+         try {
+//             Class.forName(DRIVER);
+             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+         } catch (SQLException e) {
+             System.out.println(" MySQL JDBC Driver not found!");
+             return false;
+         }
+         System.out.println("MySQL JDBC Driver Registered!");
+         driverSet = true;
+         return true;
+     }
 
     public boolean establishConnection(String url, String root, String password) {
         try {
-            // if (driverSet || loadDriver()) {
-        	DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+             if (driverSet || loadDriver()) {
                 connection = DriverManager.getConnection(url, root, password);
                 return true;
-            // }
+             }
         } catch (SQLException e) {
             System.out.println("Connection Failed!");
             e.printStackTrace();
