@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class SQLConnection {
-    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static boolean driverSet = false;
+    // private static final String DRIVER = "com.mysql.jdbc.Driver";
+    // private static boolean driverSet = false;
     private Connection connection;
 
     public void closeConnection() {
@@ -21,24 +21,24 @@ public class SQLConnection {
         }
     }
 
-    private static boolean loadDriver() {
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            System.out.println(" MySQL JDBC Driver not found!");
-            return false;
-        }
-        System.out.println("MySQL JDBC Driver Registered!");
-        driverSet = true;
-        return true;
-    }
+    // private static boolean loadDriver() {
+    //     try {
+    //         Class.forName(DRIVER);
+    //     } catch (ClassNotFoundException e) {
+    //         System.out.println(" MySQL JDBC Driver not found!");
+    //         return false;
+    //     }
+    //     System.out.println("MySQL JDBC Driver Registered!");
+    //     driverSet = true;
+    //     return true;
+    // }
 
     public boolean establishConnection(String url, String root, String password) {
         try {
-            if (driverSet || loadDriver()) {
+            // if (driverSet || loadDriver()) {
                 connection = DriverManager.getConnection(url, root, password);
                 return true;
-            }
+            // }
         } catch (SQLException e) {
             System.out.println("Connection Failed!");
             e.printStackTrace();
