@@ -8,7 +8,7 @@ public class TrainSQL {
     private static final String RANGE = "Range";
     private static final String CART = "Cart";
     private static final String ID = "Id";
-    private int trainID = 1;
+    private int trainID = -1;
     private String trainFilter = "";
     private boolean connected = false;
 
@@ -21,7 +21,7 @@ public class TrainSQL {
     }
 
     private boolean IDSet() {
-        if (trainID != -1) {
+        if (trainID == -1) {
             System.out.println("Train ID not set!");
             return false;
         }

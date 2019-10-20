@@ -36,7 +36,8 @@ public class SQLConnection {
     public boolean establishConnection(String url, String root, String password) {
         try {
             // if (driverSet || loadDriver()) {
-                connection = DriverManager.getConnection(url);
+        	DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+                connection = DriverManager.getConnection(url, root, password);
                 return true;
             // }
         } catch (SQLException e) {

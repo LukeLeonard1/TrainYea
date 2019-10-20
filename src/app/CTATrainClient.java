@@ -28,7 +28,7 @@ public class CTATrainClient {
 		// System.out.println(nPLine);
 
 		TrainSQL dbs = new TrainSQL("jdbc:mysql://localhost:3306", "root", "password");
-		
+		dbs.setTrainID(1);
 		dbs.pushCar(2, 2);
 		dbs.pushCar(1, 4);
 
