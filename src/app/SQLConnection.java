@@ -11,9 +11,9 @@ public class SQLConnection {
     // private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static boolean driverSet = false;
     private Connection conn;
-    String url = "url";
-    String user = "user";
-    String pass = "pass";
+    String url = "jdbc:mysql://localhost/db?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    String user = "root";
+    String pass = "password";
 
     private static boolean loadDriver() {
         if (!driverSet) {
@@ -33,11 +33,12 @@ public class SQLConnection {
     public void getConnection() {
         Properties connectionProps = new Properties();
         connectionProps.put("user", user);
-        connectionProps.put("password", pass);
+//        connectionProps.put("password", pass);
         try {
             loadDriver();
-            conn = DriverManager.getConnection("jdbc:" + "mysql" + "://" + "127.0.0.1" + ":" + "3307" + "/" + "",
-                    connectionProps);
+//            conn = DriverManager.getConnection("jdbc:" + "mysql" + "://" + "localhost" + ":" + "3307" + "/" + "",
+//                    connectionProps);
+            conn = DriverManager.getConnection(url);
         } catch (SQLException ex) {
             System.out.println("SQL Connection Failed!");
             ex.printStackTrace();
