@@ -8,8 +8,10 @@ import java.sql.Statement;
 
 public class SQLConnection {
     private static boolean driverSet = false;
-    // private Connection con; //TODO: bigger scope
-    String url = "jdbc:mysql://localhost:3307/TrainYea?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    // NOTE: Current MySQL Database was run off locally with phpMyAdmin
+    String mainURL = "localhost:3307/TrainYea";
+    String url = "jdbc:mysql://" + mainURL
+            + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     String user = "root";
     String pass = "";
 
@@ -19,7 +21,7 @@ public class SQLConnection {
                 // Class.forName(DRIVER);
                 DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
             } catch (SQLException e) {
-            	e.printStackTrace();
+                e.printStackTrace();
                 System.out.println(" MySQL JDBC Driver not found!");
                 return false;
             }
@@ -39,7 +41,7 @@ public class SQLConnection {
             con.close();
             return true;
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             System.out.println("Issue executing update statement!");
             return false;
         }
@@ -55,7 +57,7 @@ public class SQLConnection {
             con.close();
             return true;
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             System.out.println("Issue executing statement!");
         }
         return false;
@@ -73,23 +75,36 @@ public class SQLConnection {
             }
             con.close();
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             System.out.println("Issue executing statement!");
         }
         return new Object();
     }
 
-    private Object checkElement(String tableName, String element, String filter) {
-        return executeSelectStatement("select " + element + " from " + tableName + " where (" + filter+")", tableName);
+    public Object checkElement(String tableName, String element, String filter) {
+        return executeSelectStatement("select " + element + " from " + tableName + " where (" + filter + ")",
+                tableName);
     }
 
     public boolean input_query(String tableName, String elements, String values) {
-        return executeUpdateStatement("INSERT INTO " + tableName +"("+ elements + ") VALUES (" + values+")");
+        return executeUpdateStatement("INSERT INTO " + tableName + "(" + elements + ") VALUES (" + values + ")");
     }
 
-    public boolean update_query(String tableName, String element, String value, String filter, String defaultElms, String defaultVals) {
+    public boolean update_query(String tableName, String element, String value, String filter, String defaultElms,
+            String defaultVals) {
         if (checkElement(tableName, element, filter).getClass() == Object.class) // Check if obj is not empty
             input_query(tableName, defaultElms, defaultVals);
-        return executeUpdateStatement("UPDATE " + tableName + " SET " + element + "="+value + " WHERE (" + filter+")");
+        return executeUpdateStatement(
+                "UPDATE " + tableName + " SET " + element + "=" + value + " WHERE (" + filter + ")");
+    }
+
+    public SQLConnection(String url, String user, String pass) {
+        this.url = url;
+        this.user = user;
+        this.pass = pass;
+    }
+
+    public SQLConnection() {
+
     }
 }

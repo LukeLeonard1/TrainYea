@@ -2,9 +2,9 @@ package app;
 
 public class TrainCars {
 
-	int currentTotalWeight, carID;
+	private int carID;
 
-	double currentCap;
+	private int currentPop;
 
 	final int MAX_CAPACITY = 61, MAX_SEATS = 38, TRAIN_WEIGHT = 26000;// kg
 
@@ -16,12 +16,8 @@ public class TrainCars {
 
 	public void calcCurrentCapacity(double currentWeight) {
 
-		currentCap = (currentWeight - TRAIN_WEIGHT) / (KG_PER_PERSON);
+		currentPop = (int) ((currentWeight - TRAIN_WEIGHT) / (KG_PER_PERSON));
 
-	}
-
-	public double getCurrentCapacity() {
-		return currentCap;
 	}
 
 	public void setWeight() {
@@ -30,13 +26,13 @@ public class TrainCars {
 	}
 
 	public int seatRange() {
-		if (getCurrentCapacity() >= 0 && getCurrentCapacity() <= 43) {
+		if (currentPop >= 0 && currentPop <= 43) {
 
-			if (getCurrentCapacity() <= 19)
+			if (currentPop <= 19)
 				return 1;// several seats avaliable
-			else if (getCurrentCapacity() <= 29)
+			else if (currentPop <= 29)
 				return 2;// some seats avaliable
-			else if (getCurrentCapacity() <= 38)
+			else if (currentPop <= 38)
 				return 3;// Possiblly avaliable
 		}
 		return 4; // no seats avaliable
@@ -47,4 +43,13 @@ public class TrainCars {
 		return "" + seatRange();
 
 	}
+
+	public int getCarID() {
+		return carID;
+	}
+
+	public int getCurrentPop() {
+		return currentPop;
+	}
+
 }

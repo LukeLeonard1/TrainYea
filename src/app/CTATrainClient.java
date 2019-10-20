@@ -1,42 +1,43 @@
 package app;
 
+import java.util.ArrayList;
+
 public class CTATrainClient {
 
+	private static final String url = "jdbc:mysql://localhost:3307/TrainYea?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	private static TrainSQL dbs = new TrainSQL(url, "root", "");
+	private static ArrayList<Train> trains = new ArrayList<Train>();
+
+	private static void setTrainWeights() {
+		for (Train train : trains) {
+			train.setWeights();
+		}
+	}
+
+	private static void init() {
+		String[] colors = { "Red ", "Blue ", "Green ", "Pink " };
+		Train temp;
+		for (String trainLine : colors) {
+			temp = new Train(5, "North", trainLine);
+			System.out.println(temp);
+			trains.add(temp);
+			temp = new Train(5, "South", trainLine);
+			System.out.println(temp);
+			trains.add(temp);
+		}
+		setTrainWeights();
+	}
+
 	public static void main(String[] args) {
-
-		// ArrayList<TrainCars> trains = new ArrayList<TrainCars>();
-
-		// WeightGen gen = new WeightGen();
-		// Train sRLine = new Train(5, "South", "Red ");
-		// System.out.println(sRLine);
-		// Train nRLine = new Train(5, "North", "Red ");
-		// System.out.println(nRLine);
-
-		// Train sBLine = new Train(5, "South", "Blue");
-		// System.out.println(sBLine);
-		// Train nBLine = new Train(5, "North", "Blue");
-		// System.out.println(nBLine);
-
-		// Train sGLine = new Train(5, "South", "Green");
-		// System.out.println(sGLine);
-		// Train nGLine = new Train(5, "North", "Green");
-		// System.out.println(nGLine);
-
-		// Train sPLine = new Train(5, "South", "Pink");
-		// System.out.println(sPLine);
-		// Train nPLine = new Train(5, "North", "Pink");
-		// System.out.println(nPLine);
-
-		String url = "jdbc:mysql://localhost:3307/TrainYea?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-		TrainSQL dbs = new TrainSQL(url, "root", "");
-		dbs.setTrainID(1);
-		dbs.pushCar(2, 2);
-		dbs.pushCar(1, 4);
-		dbs.setTrainID(3);
-		dbs.pushCar(2, 2);
-		dbs.pushCar(4, 3);
-		dbs.pushCar(1, 4);
-
+		init();
+		while (true) {
+			for (Train train : trains) {
+				dbs.pullTrain(train.getLine(), train.getDirection());
+				for (TrainCars car : train.getCars()) {
+					dbs.pushCar(car.getCarID(), car.getCurrentPop());	
+				}
+			}
+		}
 	}
 
 }

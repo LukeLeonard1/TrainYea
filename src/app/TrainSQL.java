@@ -2,16 +2,16 @@ package app;
 
 public class TrainSQL {
     // private static final String TRAINTABLE = "Train"; //Used for calling
-    // private static final String TRAINLINE = "TrainLine";
-    // private static final String DIRECTION = "Direction";
+    private static final String TRAINLINE = "TrainLine";
+    private static final String DIRECTION = "Direction";
     private static final String CURRENTTABLE = "Current";
     private static final String RANGE = "Rng";
     private static final String CART = "Cart";
     private static final String ID = "TrainId";
     private int trainID = -1;
-    private String trainFilter = "";  
+    private String trainFilter = "";
 
-    SQLConnection dbs = new SQLConnection();
+    SQLConnection dbs;
 
     public void setTrainID(int trainID) {
         this.trainID = trainID;
@@ -27,26 +27,25 @@ public class TrainSQL {
         return true;
     }
 
-    // public void pushTrain(String color, char direction) {
-    // if (IDSet()) {
-    // dbs.update_query(CURRENTTABLE, TRAINLINE + "=" + color + ", " + DIRECTION +
-    // "=" + direction, trainFilter);
-    // }
-    // }
+    public void pullTrain(String color, String direction) {
+        Object obj = dbs.checkElement(CURRENTTABLE, TRAINLINE + "=" + color + ", " + DIRECTION + "=" + direction,
+                trainFilter);
+        if (obj instanceof Integer)
+            setTrainID((Integer) obj);
+    }
 
     public void pushCar(int carNum, int range) {
         if (IDSet()) {
             String fnlFilter = trainFilter + " AND " + CART + "=" + carNum;
-            String defaultElm = ID+", "+CART;
-            String defaultVal = trainID+","+carNum;
-            dbs.update_query(CURRENTTABLE, RANGE, "" + range, fnlFilter, defaultElm,defaultVal);
-        }else {
-        	System.out.println("Failed to push car!");
+            String defaultElm = ID + ", " + CART;
+            String defaultVal = trainID + "," + carNum;
+            dbs.update_query(CURRENTTABLE, RANGE, "" + range, fnlFilter, defaultElm, defaultVal);
+        } else {
+            System.out.println("Failed to push car!");
         }
     }
 
     public TrainSQL(String url, String root, String password) {
-        // connected = dbs.establishConnection(url, root, password);
-        // System.out.println(connected ? "Connection Made!" : "Connection Failed!");
+        dbs = new SQLConnection(url, root, password);
     }
 }
