@@ -5,53 +5,96 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 public class SQLConnection {
     // private static final String DRIVER = "com.mysql.jdbc.Driver";
-     private static boolean driverSet = false;
-    private Connection connection;
+    private static boolean driverSet = false;
+    private Connection conn;
     String url = "url";
     String user = "user";
-    String pass = "pass"; 
+    String pass = "pass";
 
-    public void closeConnection() {
+    private static boolean loadDriver() {
+        if (!driverSet) {
+            try {
+                // Class.forName(DRIVER);
+                DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            } catch (SQLException e) {
+                System.out.println(" MySQL JDBC Driver not found!");
+                return false;
+            }
+            System.out.println("MySQL JDBC Driver Registered!");
+        }
+        driverSet = true;
+        return true;
+    }
+
+    public void getConnection() {
+        Properties connectionProps = new Properties();
+        connectionProps.put("user", user);
+        connectionProps.put("password", pass);
         try {
-            if (connection != null)
-                connection.close();
-            System.out.println("Connection closed!");
-        } catch (SQLException e) {
-            e.printStackTrace();
+            loadDriver();
+            conn = DriverManager.getConnection("jdbc:" + "mysql" + "://" + "127.0.0.1" + ":" + "3307" + "/" + "",
+                    connectionProps);
+        } catch (SQLException ex) {
+            System.out.println("SQL Connection Failed!");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            System.out.println("Connection Failed!");
+            ex.printStackTrace();
         }
     }
 
-     private static boolean loadDriver() {
-         try {
-//             Class.forName(DRIVER);
-             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-         } catch (SQLException e) {
-             System.out.println(" MySQL JDBC Driver not found!");
-             return false;
-         }
-         System.out.println("MySQL JDBC Driver Registered!");
-         driverSet = true;
-         return true;
-     }
+    public void executeMySQLQuery() {
+        Statement stmt = null;
+        ResultSet resultset = null;
 
-    public boolean establishConnection(String url, String root, String password) {
         try {
-             if (driverSet || loadDriver()) {
-                connection = DriverManager.getConnection(url, root, password);
-                return true;
-             }
-        } catch (SQLException e) {
-            System.out.println("Connection Failed!");
-            e.printStackTrace();
+            stmt = conn.createStatement();
+            resultset = stmt.executeQuery("SHOW DATABASES;");
+
+            if (stmt.execute("SHOW DATABASES;")) {
+                resultset = stmt.getResultSet();
+            }
+
+            while (resultset.next()) {
+                System.out.println(resultset.getString("Database"));
+            }
+        } catch (SQLException ex) {
+            System.out.println("SQL execute Connection Failed!");
+            ex.printStackTrace();
+        } finally {
+            // release resources
+            if (resultset != null) {
+                try {
+                    resultset.close();
+                } catch (SQLException sqlEx) {
+                }
+                resultset = null;
+            }
+
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                }
+                stmt = null;
+            }
+
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException sqlEx) {
+                }
+                conn = null;
+            }
         }
-        return false;
     }
 
     private boolean executeUpdateStatement(String statement) {
-        try (Statement stmt = connection.createStatement()) {
+        try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(statement);
         } catch (Exception e) {
             System.out.println("Issue executing update statement!");
@@ -61,7 +104,7 @@ public class SQLConnection {
     }
 
     public boolean executeStatement(String statement) {
-        try (Statement stmt = connection.createStatement()) {
+        try (Statement stmt = conn.createStatement()) {
             stmt.execute(statement);
             return true;
         } catch (Exception e) {
@@ -71,7 +114,7 @@ public class SQLConnection {
     }
 
     public Object executeSelectStatement(String statement, String columnLabel) {
-        try (Statement stmt = connection.createStatement()) {
+        try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(statement);
             if (rs.next()) {
                 return rs.getObject(1);
