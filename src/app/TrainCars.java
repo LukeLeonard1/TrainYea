@@ -6,8 +6,6 @@ public class TrainCars {
 	
 	double currentCap;
 	
-	String line, direction;
-	
 	final int MAX_CAPACITY=61,
 			  MAX_SEATS=38,
 			  TRAIN_WEIGHT=26000;//kg
@@ -19,10 +17,9 @@ public class TrainCars {
 	}
 	
 
-	public double calcCurrentCapacity(double currentWeight) {
+	public void calcCurrentCapacity(double currentWeight) {
 	
 		currentCap =(currentWeight-TRAIN_WEIGHT)/(KG_PER_PERSON);
-		return Math.floor(currentCap);
 		
 	}
 	
@@ -30,8 +27,9 @@ public class TrainCars {
 		return currentCap;
 	}
 	
-	public int getCurrentCart(int counter) {
-		return  - counter;
+	public void setWeight() {
+		WeightGen gen = new WeightGen();
+		this.calcCurrentCapacity(gen.Weight());
 	}
 	
 	public int seatRange() {
@@ -52,7 +50,7 @@ public class TrainCars {
 	}
 
 	public String toString() {
-		return direction + " " + line + " " +seatRange();
+		return  ""+seatRange();
 		
 	}
 }
