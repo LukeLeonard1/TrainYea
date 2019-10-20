@@ -35,14 +35,14 @@ public class CTATrainClient {
 	public static void main(String[] args) throws InterruptedException {
 		init();
 		while (true) {
-			TimeUnit.SECONDS.sleep(5);
 			for (Train train : trains) {
 				// dbs.pullTrain(train.getLine(), train.getDirection()); //FIXME: pull static
 				// data from db
 				dbs.setTrainID(train.getID());
 				for (TrainCars car : train.getCars()) {
+					TimeUnit.SECONDS.sleep(1);
 					car.setWeight();
-					dbs.pushCar(car.getCarID(), car.getCurrentPop());
+					dbs.pushCar(car.getCarID(), car.seatRange());
 				}
 			}
 		}
