@@ -40,7 +40,7 @@ public class CTATrainClient {
 				// data from db
 				dbs.setTrainID(train.getID());
 				for (TrainCars car : train.getCars()) {
-					TimeUnit.MILLISECONDS.sleep(200);
+					TimeUnit.MILLISECONDS.sleep(100);
 					car.setWeight();
 					dbs.pushCar(car.getCarID(), car.seatRange());
 				}
